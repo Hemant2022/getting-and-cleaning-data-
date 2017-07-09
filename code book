@@ -1,0 +1,40 @@
+
+tlabels reads table y_test.txt
+
+tsubjects reads table subject_test.txt
+
+tdata reads table X_test.txt
+
+trlabels reads table  y_train.txt
+
+trsubjects reads table subject_train.txt
+
+trdata reads table X_train.txt
+
+datatable complete table of test and training data
+
+features  reads table features.txt
+
+features.mean.std contains the function names with mean and std in the name 
+
+datatable.mean.std has the data with the name of the function
+
+
+labels reads table activity_labels.txt
+
+datatable.mean.std$label has labels like walking , standing instead of indexs 
+
+columnam <- c("subject", "label", features.mean.std$V2)
+
+columnam <- tolower(gsub("[^[:alpha:]]", "", columnam))
+
+colnames(datatable.mean.std) <- columnam
+
+
+avgdata <- aggregate(datatable.mean.std[, 3:ncol(datatable.mean.std)],
+                     by=list(subject = datatable.mean.std$subject, 
+                             label = datatable.mean.std$label),
+                     mean)
+
+write.table(format(avgdata, scientific=T), "tidydata.txt",
+            row.names=F, col.names=F, quote=2)
